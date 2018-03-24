@@ -12,12 +12,14 @@ public class AudioFile implements Serializable {
     private String title;
     private String album;
     private String artist;
+    private String albumArt;
 
-    public AudioFile(String data, String title, String album, String artist) {
+    public AudioFile(String data, String title, String album, String artist, String albumArt) {
         this.data = data;
         this.title = title;
         this.album = album;
         this.artist = artist;
+        this.albumArt = albumArt;
     }
 
     public String getData() {

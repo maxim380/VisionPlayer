@@ -80,7 +80,7 @@ public class ListFragment extends Fragment{
         public void onClick(View view) {
             Toast.makeText(view.getContext(), "Hallo! " + this.getAdapterPosition(), Toast.LENGTH_SHORT).show();
             MainActivity activity = (MainActivity) getActivity();
-            activity.playAudio(files.get(this.getAdapterPosition()).getData());
+            activity.playAudio(files.get(this.getAdapterPosition()).getData(), this.getAdapterPosition());
         }
     }
 

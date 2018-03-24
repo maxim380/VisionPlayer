@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 
 /**
@@ -22,8 +23,17 @@ public class PageTwo extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_page_two, container, false);
+        View view = inflater.inflate(R.layout.fragment_page_two, container, false);
+
+        TextView textView = (TextView) view.findViewById(R.id.textView2);
+        Bundle bundle = this.getArguments();
+        AudioFile tmp = (AudioFile)bundle.getSerializable("currentSong");
+
+        if(tmp != null) {
+            textView.setText(tmp.getTitle());
+        }
+
+        return view;
     }
 
 }

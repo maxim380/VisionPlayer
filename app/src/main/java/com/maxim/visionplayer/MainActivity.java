@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean serviceBound = false;
     private ArrayList<AudioFile> audioList;
     private boolean permissionGranted = false;
+    private int currentSongIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +79,12 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_nowPlaying:
                     setTitle("Now Playing");
+
+                    Bundle currentSongBundle = new Bundle();
+                    currentSongBundle.putSerializable("currentSong", audioList.get(currentSongIndex));
+
                     PageTwo fragment2 = new PageTwo();
+                    fragment2.setArguments(currentSongBundle);
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "FragmentName");
                     fragmentTransaction2.commit();
@@ -114,9 +120,10 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    public void playAudio(String media) {
+    public void playAudio(String media, int index) {
         //Check is service is active
         if (!serviceBound) {
+            currentSongIndex = index;
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
             playerIntent.putExtra("media", media);
             startService(playerIntent);
@@ -171,9 +178,10 @@ public class MainActivity extends AppCompatActivity {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
+//                String albumArt = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
 
                 // Save to audioList
-                audioList.add(new AudioFile(data, title, album, artist));
+                audioList.add(new AudioFile(data, title, album, artist, ""));
             }
         }
         cursor.close();
@@ -235,6 +243,17 @@ public class MainActivity extends AppCompatActivity {
             // other 'case' lines to check for other
             // permissions this app might request.
         }
+    }
+
+    public ArrayList<AudioFile> getAudioList() {
+        return this.audioList;
+    }
+
+    public AudioFile getCurrentSong() {
+        if(currentSongIndex != 0) {
+            return audioList.get(currentSongIndex);
+        }
+        return null;
     }
 
 }
