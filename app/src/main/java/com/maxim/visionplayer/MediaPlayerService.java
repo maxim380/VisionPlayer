@@ -51,20 +51,20 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         mediaPlayer.prepareAsync();
     }
 
-    private void playMedia() {
+    public void playMedia() {
         if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
         }
     }
 
-    private void stopMedia() {
+    public void stopMedia() {
         if (mediaPlayer == null) return;
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
         }
     }
 
-    private void pauseMedia() {
+    public void pauseMedia() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             resumePosition = mediaPlayer.getCurrentPosition();
@@ -211,6 +211,10 @@ public class MediaPlayerService extends Service implements MediaPlayer.OnComplet
         public MediaPlayerService getService() {
             return MediaPlayerService.this;
         }
+    }
+
+    public boolean isPlaying() {
+        return mediaPlayer.isPlaying();
     }
 
 }

@@ -1,18 +1,93 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:windowBackground"
     tools:context="com.maxim.visionplayer.MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:textSize="24sp"
-        android:textColor="#4a4a4a"
-        android:layout_margin="20dp"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/textView2"
-        android:text="Page two" />
+        android:layout_height="wrap_content"
+        android:minWidth="100dp">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="24dp"
+            android:text="TextView"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="255dp"
+            android:layout_height="255dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginTop="46dp"
+            android:src="@android:color/background_dark"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/playImg"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="36dp"
+            android:layout_marginEnd="36dp"
+            android:layout_marginStart="36dp"
+            android:src="@drawable/ic_play_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/nextImg"
+            app:layout_constraintStart_toEndOf="@+id/prevImg" />
+
+        <ImageView
+            android:id="@+id/nextImg"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="36dp"
+            android:layout_marginEnd="36dp"
+            android:src="@drawable/ic_skip_next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageView
+            android:id="@+id/prevImg"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginBottom="36dp"
+            android:layout_marginStart="36dp"
+            android:src="@drawable/ic_skip_previous"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewSongInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="TextView"
+            app:layout_constraintBottom_toTopOf="@+id/playImg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+
+
+
 
 </FrameLayout>

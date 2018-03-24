@@ -5,7 +5,6 @@
     android:background="?android:windowBackground"
     tools:context="com.maxim.visionplayer.MainActivity">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:textSize="24sp"
         android:textColor="#4a4a4a"

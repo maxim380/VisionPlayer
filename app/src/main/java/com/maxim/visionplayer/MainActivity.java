@@ -80,11 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_nowPlaying:
                     setTitle("Now Playing");
 
-                    Bundle currentSongBundle = new Bundle();
-                    currentSongBundle.putSerializable("currentSong", audioList.get(currentSongIndex));
+//                    Bundle currentSongBundle = new Bundle();
+//                    currentSongBundle.putSerializable("currentSong", audioList.get(currentSongIndex));
 
                     PageTwo fragment2 = new PageTwo();
-                    fragment2.setArguments(currentSongBundle);
+//                    fragment2.setArguments(currentSongBundle);
                     android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
                     fragmentTransaction2.replace(R.id.content, fragment2, "FragmentName");
                     fragmentTransaction2.commit();
@@ -250,10 +250,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public AudioFile getCurrentSong() {
-        if(currentSongIndex != 0) {
+        if(audioList.size() != 0) {
             return audioList.get(currentSongIndex);
         }
         return null;
+    }
+
+    public MediaPlayerService getMediaPlayer() {
+        return this.mediaPlayer;
     }
 
 }
