@@ -54,20 +54,6 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.add(R.id.placeHolder, fragment);
         fragmentTransaction.commit();
-
-//        Button button = findViewById(R.id.button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View v) {
-//                loadAudio();
-//                if(audioList.size() != 0) {
-//                    playAudio(audioList.get(0).getData());
-//                }
-//                else {
-////                    TextView textView = (TextView) findViewById(R.id.textView2);
-////                    textView.setText("No songs found");
-//                }
-//            }
-//        });
     }
 
     //Binding this Client to the AudioPlayer Service
@@ -88,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    private void playAudio(String media) {
+    public void playAudio(String media) {
         //Check is service is active
         if (!serviceBound) {
             Intent playerIntent = new Intent(this, MediaPlayerService.class);
