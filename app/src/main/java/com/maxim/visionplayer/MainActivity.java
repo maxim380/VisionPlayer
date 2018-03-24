@@ -3,8 +3,6 @@ package com.maxim.visionplayer;
 import android.*;
 import android.Manifest;
 import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -18,10 +16,12 @@ import android.os.Build;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
         checkPermission();
         loadAudio();
 
@@ -50,11 +53,48 @@ public class MainActivity extends AppCompatActivity {
 
         ListFragment fragment = new ListFragment();
         fragment.setArguments(bundle);
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.placeHolder, fragment);
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_library:
+
+                    setTitle("Music Library");
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("files", audioList);
+
+                    ListFragment fragment = new ListFragment();
+                    fragment.setArguments(bundle);
+                    android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction.add(R.id.content, fragment, "FragmentName");
+                    fragmentTransaction.commit();
+                    return true;
+                case R.id.navigation_nowPlaying:
+                    setTitle("Now Playing");
+                    PageTwo fragment2 = new PageTwo();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction2.replace(R.id.content, fragment2, "FragmentName");
+                    fragmentTransaction2.commit();
+                    return true;
+                case R.id.navigation_friends:
+                    setTitle("Friends");
+                    PageThree fragment3 = new PageThree();
+                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
+                    fragmentTransaction3.replace(R.id.content, fragment3, "FragmentName");
+                    fragmentTransaction3.commit();
+                    return true;
+            }
+            System.out.println("False :(");
+            return false;
+        }
+    };
 
     //Binding this Client to the AudioPlayer Service
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -82,8 +122,7 @@ public class MainActivity extends AppCompatActivity {
             startService(playerIntent);
             bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         } else {
-            //Service is active
-            //Send media with BroadcastReceiver
+
         }
 
 //        TextView textView = (TextView) findViewById(R.id.textView2);

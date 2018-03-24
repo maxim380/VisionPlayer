@@ -1,6 +1,6 @@
 package com.maxim.visionplayer;
 
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.os.Bundle;
@@ -20,6 +20,10 @@ import java.util.ArrayList;
 public class ListFragment extends Fragment{
 
     ArrayList<AudioFile> files;
+
+    public ListFragment() {
+
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstance) {
         View view = inflater.inflate(R.layout.fragment_list, container, false);
@@ -70,6 +74,7 @@ public class ListFragment extends Fragment{
 
         public void bindView(int position) {
             mItemText.setText(files.get(position).getTitle());
+            mItemImage.setImageResource(R.mipmap.ic_launcher);
         }
 
         public void onClick(View view) {
