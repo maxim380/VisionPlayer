@@ -45,7 +45,7 @@ public class PageTwo extends Fragment {
         prevImg = (ImageView) view.findViewById(R.id.prevImg);
         playImg = (ImageView) view.findViewById(R.id.playImg);
 
-        if(mediaPlayer != null) {
+        if (mediaPlayer != null) {
             if (!mediaPlayer.isPlaying()) {
                 playImg.setTag(R.drawable.ic_play_arrow);
             } else {
@@ -54,13 +54,7 @@ public class PageTwo extends Fragment {
                 playImg.setImageResource(R.drawable.ic_pause);
             }
         }
-
         createListeners();
-
-        if(tmp != null) {
-            titleText.setText(tmp.getTitle());
-            infoText.setText(tmp.getArtist() + " - " + tmp.getAlbum());
-        }
 
         return view;
     }
@@ -80,17 +74,32 @@ public class PageTwo extends Fragment {
 
         playImg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if((int)playImg.getTag() == R.drawable.ic_play_arrow) {
-                    mediaPlayer.playMedia();
-                    playImg.setImageResource(R.drawable.ic_pause);
-                    playImg.setTag(R.drawable.ic_pause);
+                if (mediaPlayer != null) {
+                    if ((int) playImg.getTag() == R.drawable.ic_play_arrow) {
+                        mediaPlayer.playMedia();
+                        playImg.setImageResource(R.drawable.ic_pause);
+                        playImg.setTag(R.drawable.ic_pause);
+                    } else {
+                        mediaPlayer.pauseMedia();
+                        playImg.setImageResource(R.drawable.ic_play_arrow);
+                        playImg.setTag(R.drawable.ic_play_arrow);
+                    }
                 } else {
-                    mediaPlayer.pauseMedia();
-                    playImg.setImageResource(R.drawable.ic_play_arrow);
-                    playImg.setTag(R.drawable.ic_play_arrow);
+                    if(activity.getFirstSong() != null) {
+                        activity.playAudio(activity.getFirstSong().getData(), 0);
+                        setSongInfo(activity.getFirstSong());
+                        playImg.setImageResource(R.drawable.ic_pause);
+                        playImg.setTag(R.drawable.ic_pause);
+                    }
                 }
             }
         });
     }
 
+    public void setSongInfo(AudioFile file) {
+        if(file != null) {
+            titleText.setText(file.getTitle());
+            infoText.setText(file.getArtist() + " - " + file.getAlbum());
+        }
+    }
 }

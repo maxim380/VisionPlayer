@@ -255,6 +255,13 @@ public class MainActivity extends AppCompatActivity {
         return null;
     }
 
+    public AudioFile getFirstSong() {
+        if(audioList.size() > 0) {
+            return audioList.get(0);
+        }
+        return null;
+    }
+
     public MediaPlayerService getMediaPlayer() {
         return this.mediaPlayer;
     }
