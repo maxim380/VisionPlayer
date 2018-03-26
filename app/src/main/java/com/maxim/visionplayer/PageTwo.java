@@ -46,7 +46,7 @@ public class PageTwo extends Fragment {
         playImg = (ImageView) view.findViewById(R.id.playImg);
 
         if(mediaPlayer != null) {
-            if (mediaPlayer.isPlaying()) {
+            if (!mediaPlayer.isPlaying()) {
                 playImg.setTag(R.drawable.ic_play_arrow);
             } else {
                 playImg = (ImageView) view.findViewById(R.id.playImg);
