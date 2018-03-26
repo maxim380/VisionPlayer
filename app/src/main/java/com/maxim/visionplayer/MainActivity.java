@@ -49,6 +49,32 @@ public class MainActivity extends AppCompatActivity {
         checkPermission();
         loadAudio();
 
+        loadLibraryPage();
+    }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_library:
+                    loadLibraryPage();
+                    return true;
+                case R.id.navigation_nowPlaying:
+                    loadNowPlayingPage();
+                    return true;
+                case R.id.navigation_friends:
+                    loadFriendsPage();
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private void loadLibraryPage() {
+
+        setTitle("Music Library");
         Bundle bundle = new Bundle();
         bundle.putSerializable("files", audioList);
 
@@ -59,48 +85,21 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private void loadNowPlayingPage() {
+        setTitle("Now Playing");
+        PageTwo fragment = new PageTwo();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
+        fragmentTransaction.commit();
+    }
 
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_library:
-
-                    setTitle("Music Library");
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("files", audioList);
-
-                    ListFragment fragment = new ListFragment();
-                    fragment.setArguments(bundle);
-                    android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction.add(R.id.content, fragment, "FragmentName");
-                    fragmentTransaction.commit();
-                    return true;
-                case R.id.navigation_nowPlaying:
-                    setTitle("Now Playing");
-
-//                    Bundle currentSongBundle = new Bundle();
-//                    currentSongBundle.putSerializable("currentSong", audioList.get(currentSongIndex));
-
-                    PageTwo fragment2 = new PageTwo();
-//                    fragment2.setArguments(currentSongBundle);
-                    android.support.v4.app.FragmentTransaction fragmentTransaction2 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction2.replace(R.id.content, fragment2, "FragmentName");
-                    fragmentTransaction2.commit();
-                    return true;
-                case R.id.navigation_friends:
-                    setTitle("Friends");
-                    PageThree fragment3 = new PageThree();
-                    android.support.v4.app.FragmentTransaction fragmentTransaction3 = getSupportFragmentManager().beginTransaction();
-                    fragmentTransaction3.replace(R.id.content, fragment3, "FragmentName");
-                    fragmentTransaction3.commit();
-                    return true;
-            }
-            System.out.println("False :(");
-            return false;
-        }
-    };
+    private void loadFriendsPage() {
+        setTitle("Friends");
+        PageThree fragment = new PageThree();
+        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
+        fragmentTransaction.commit();
+    }
 
     //Binding this Client to the AudioPlayer Service
     private ServiceConnection serviceConnection = new ServiceConnection() {

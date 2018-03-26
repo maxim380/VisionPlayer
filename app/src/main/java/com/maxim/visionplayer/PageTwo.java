@@ -45,12 +45,14 @@ public class PageTwo extends Fragment {
         prevImg = (ImageView) view.findViewById(R.id.prevImg);
         playImg = (ImageView) view.findViewById(R.id.playImg);
 
-        if(mediaPlayer.isPlaying()) {
-            playImg.setTag(R.drawable.ic_play_arrow);
-        } else {
-            playImg = (ImageView) view.findViewById(R.id.playImg);
-            playImg.setTag(R.drawable.ic_pause);
-            playImg.setImageResource(R.drawable.ic_pause);
+        if(mediaPlayer != null) {
+            if (mediaPlayer.isPlaying()) {
+                playImg.setTag(R.drawable.ic_play_arrow);
+            } else {
+                playImg = (ImageView) view.findViewById(R.id.playImg);
+                playImg.setTag(R.drawable.ic_pause);
+                playImg.setImageResource(R.drawable.ic_pause);
+            }
         }
 
         createListeners();
