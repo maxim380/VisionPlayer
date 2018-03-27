@@ -260,4 +260,11 @@ public class MainActivity extends AppCompatActivity {
         return this.mediaPlayer;
     }
 
+    public int getCurrentSongIndex() {
+        return this.currentSongIndex;
+    }
+
+    public AudioFile getSongByIndex(int index) {
+        return audioList.get(index);
+    }
 }
