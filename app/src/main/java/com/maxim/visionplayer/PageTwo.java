@@ -35,7 +35,6 @@ public class PageTwo extends Fragment {
         View view = inflater.inflate(R.layout.fragment_page_two, container, false);
 
         activity = (MainActivity) getActivity();
-        AudioFile tmp = activity.getCurrentSong();
         mediaPlayer = activity.getMediaPlayer();
 
 
@@ -44,6 +43,8 @@ public class PageTwo extends Fragment {
         nextImg = (ImageView) view.findViewById(R.id.nextImg);
         prevImg = (ImageView) view.findViewById(R.id.prevImg);
         playImg = (ImageView) view.findViewById(R.id.playImg);
+
+        setSongInfo(activity.getCurrentSong());
 
         if (mediaPlayer != null) {
             if (!mediaPlayer.isPlaying()) {
@@ -55,7 +56,6 @@ public class PageTwo extends Fragment {
             }
         }
         createListeners();
-
         return view;
     }
 
