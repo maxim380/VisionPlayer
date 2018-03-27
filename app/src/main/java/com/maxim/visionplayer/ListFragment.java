@@ -1,8 +1,6 @@
 package com.maxim.visionplayer;
 
 import android.support.v4.app.Fragment;
-import android.content.Context;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,9 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ListFragment extends Fragment{
@@ -78,7 +73,6 @@ public class ListFragment extends Fragment{
         }
 
         public void onClick(View view) {
-            Toast.makeText(view.getContext(), "Hallo! " + this.getAdapterPosition(), Toast.LENGTH_SHORT).show();
             MainActivity activity = (MainActivity) getActivity();
             activity.playAudio(files.get(this.getAdapterPosition()).getData(), this.getAdapterPosition());
         }
