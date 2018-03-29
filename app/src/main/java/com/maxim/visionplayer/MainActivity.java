@@ -1,23 +1,21 @@
 package com.maxim.visionplayer;
 
-import android.*;
 import android.Manifest;
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,12 +36,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        checkPermission();
+
+        findViewById(R.id.toolbar).setBackgroundColor(getColour());
+        getWindow().setStatusBarColor(getColour());
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        checkPermission();
         loadAudio();
-
         loadLibraryPage();
     }
 
@@ -62,6 +63,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_friends:
                     loadFriendsPage();
                     return true;
+                case R.id.navigation_settings:
+                    loadSettingsPage();
+                    return true;
             }
             return false;
         }
@@ -75,23 +79,31 @@ public class MainActivity extends AppCompatActivity {
 
         ListFragment fragment = new ListFragment();
         fragment.setArguments(bundle);
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
     }
 
     private void loadNowPlayingPage() {
         setTitle("Now Playing");
-        PageTwo fragment = new PageTwo();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        PlayerPage fragment = new PlayerPage();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
     }
 
     private void loadFriendsPage() {
         setTitle("Friends");
-        PageThree fragment = new PageThree();
-        android.support.v4.app.FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FriendsPage fragment = new FriendsPage();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
+        fragmentTransaction.commit();
+    }
+
+    private void loadSettingsPage() {
+        setTitle("Settings");
+        SettingsPage fragment = new SettingsPage();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
     }
@@ -172,6 +184,11 @@ public class MainActivity extends AppCompatActivity {
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
 //                String albumArt = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+
+//                Long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
+//
+//                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+//                Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
                 // Save to audioList
                 audioList.add(new AudioFile(data, title, album, artist, ""));
@@ -260,11 +277,30 @@ public class MainActivity extends AppCompatActivity {
         return this.mediaPlayer;
     }
 
-    public int getCurrentSongIndex() {
-        return this.currentSongIndex;
+    public AudioFile getNextSong() {
+        if(audioList.size() > 0 && currentSongIndex != audioList.size()) {
+            return audioList.get(currentSongIndex + 1);
+        }
+        return null;
     }
 
-    public AudioFile getSongByIndex(int index) {
-        return audioList.get(index);
+    public AudioFile getPreviousSong() {
+        if(audioList.size() > 0 && currentSongIndex > 0) {
+            return audioList.get(currentSongIndex - 1);
+        }
+        return null;
+    }
+
+    public int getColour() {
+        SharedPreferences prefs = getSharedPreferences("ToolbarColour", Context.MODE_PRIVATE);
+        return prefs.getInt("colour", getResources().getColor(R.color.colorPrimary));
+    }
+
+    public boolean currentSongIsFirstSong() {
+        return currentSongIndex > 0;
+    }
+
+    public boolean currentSongIsLastSong() {
+        return currentSongIndex == audioList.size();
     }
 }

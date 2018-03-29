@@ -1,8 +1,9 @@
 package com.maxim.visionplayer;
 
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class PageTwo extends Fragment {
+public class PlayerPage extends Fragment {
 
     private ImageView nextImg;
     private ImageView prevImg;
@@ -25,14 +26,14 @@ public class PageTwo extends Fragment {
     private MainActivity activity;
     private MediaPlayerService mediaPlayer;
 
-    public PageTwo() {
+    public PlayerPage() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_page_two, container, false);
+        View view = inflater.inflate(R.layout.fragment_player_page, container, false);
 
         activity = (MainActivity) getActivity();
         mediaPlayer = activity.getMediaPlayer();
@@ -54,6 +55,12 @@ public class PageTwo extends Fragment {
                 playImg.setTag(R.drawable.ic_pause);
                 playImg.setImageResource(R.drawable.ic_pause);
             }
+        }
+
+        if(activity.currentSongIsFirstSong()) {
+            prevImg.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
+        } else if (activity.currentSongIsLastSong()) {
+            nextImg.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
         }
         createListeners();
         return view;
