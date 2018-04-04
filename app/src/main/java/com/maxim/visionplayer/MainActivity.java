@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getWindow().setStatusBarColor(getColour());
+        changeColor(getColor());
         checkPermission();
     }
 
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setTitle(String title) {
-        TextView titleView = (TextView)findViewById(R.id.title);
+        TextView titleView = (TextView) findViewById(R.id.title);
         titleView.setText(title);
     }
 
@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(serviceBound) {
+        if (serviceBound) {
             unbindService(serviceConnection);
             mediaPlayer.stopSelf();
         }
@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         //TODO fix this
-//        navigation.setItemBackgroundResource(getColour());
+//        navigation.setItemBackgroundResource(getColor());
         loadAudio();
         loadLibraryPage();
     }
@@ -287,14 +287,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public AudioFile getCurrentSong() {
-        if(audioList.size() != 0) {
+        if (audioList.size() != 0) {
             return audioList.get(currentSongIndex);
         }
         return null;
     }
 
     public AudioFile getFirstSong() {
-        if(audioList.size() > 0) {
+        if (audioList.size() > 0) {
             return audioList.get(0);
         }
         return null;
@@ -305,22 +305,56 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public AudioFile getNextSong() {
-        if(audioList.size() > 0 && currentSongIndex != audioList.size() - 1) {
+        if (audioList.size() > 0 && currentSongIndex != audioList.size() - 1) {
             return audioList.get(currentSongIndex + 1);
         }
         return null;
     }
 
     public AudioFile getPreviousSong() {
-        if(audioList.size() > 0 && currentSongIndex > 0) {
+        if (audioList.size() > 0 && currentSongIndex > 0) {
             return audioList.get(currentSongIndex - 1);
         }
         return null;
     }
 
-    public int getColour() {
-        SharedPreferences prefs = getSharedPreferences("ToolbarColour", Context.MODE_PRIVATE);
-        return prefs.getInt("colour", getResources().getColor(R.color.colorPrimary));
+    public int getColor() {
+        SharedPreferences prefs = getSharedPreferences("colorPrefs", Context.MODE_PRIVATE);
+
+        String color = prefs.getString("colorString", "x");
+
+        switch (color) {
+            case "blue":
+                return getResources().getColor(R.color.colorPrimary);
+            case "red":
+                return getResources().getColor(R.color.colorRed);
+            case "purple":
+                return getResources().getColor(R.color.colorPurple);
+            case "green":
+                return getResources().getColor(R.color.colorGreen);
+            default:
+                return getResources().getColor(R.color.colorPrimary);
+        }
+    }
+
+    public void changeColor(int color) {
+        getWindow().setStatusBarColor(color);
+        BottomNavigationView nav = (BottomNavigationView)findViewById(R.id.navigation);
+        switch (color) {
+            case -12627531:
+                nav.setItemBackgroundResource(R.color.colorPrimary);
+                break;
+            case -65536:
+                nav.setItemBackgroundResource(R.color.colorRed);
+                break;
+            case -10092289:
+                nav.setItemBackgroundResource(R.color.colorPurple);
+                break;
+            case -16744448:
+                nav.setItemBackgroundResource(R.color.colorGreen);
+                break;
+
+        }
     }
 
     public int getCurrentSongIndex() {

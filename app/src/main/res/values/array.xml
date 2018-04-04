@@ -1,0 +1,15 @@
+<resources>
+    <string-array name="listArray">
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Purple</item>
+        <item>Green</item>
+    </string-array>
+
+    <string-array name="listValues">
+        <item>blue</item>
+        <item>red</item>
+        <item>purple</item>
+        <item>green</item>
+    </string-array>
+</resources>
