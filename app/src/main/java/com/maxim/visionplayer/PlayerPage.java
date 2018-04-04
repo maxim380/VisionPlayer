@@ -3,6 +3,7 @@ package com.maxim.visionplayer;
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -57,11 +58,8 @@ public class PlayerPage extends Fragment {
             }
         }
 
-        if(activity.currentSongIsFirstSong()) {
-            prevImg.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        } else if (activity.currentSongIsLastSong()) {
-            nextImg.setColorFilter(Color.GRAY, PorterDuff.Mode.MULTIPLY);
-        }
+
+
         createListeners();
         return view;
     }
@@ -69,13 +67,29 @@ public class PlayerPage extends Fragment {
     private void createListeners() {
         nextImg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                if(activity.getNextSong() != null) {
+                    AudioFile tmp = activity.getNextSong();
+                    activity.playAudio(tmp.getData(), activity.getCurrentSongIndex() + 1);
+                    playImg.setTag(R.drawable.ic_pause);
+                    playImg.setImageResource(R.drawable.ic_pause);
+                    setSongInfo(tmp);
+                } else {
+                    System.out.println("Helemaal niets doen");
+                }
             }
         });
 
         prevImg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                if(activity.getPreviousSong() != null) {
+                    AudioFile tmp = activity.getPreviousSong();
+                    activity.playAudio(tmp.getData(), activity.getCurrentSongIndex() - 1);
+                    playImg.setTag(R.drawable.ic_pause);
+                    playImg.setImageResource(R.drawable.ic_pause);
+                    setSongInfo(tmp);
+                } else {
+                    System.out.println("Helemaal niets doen");
+                }
             }
         });
 
@@ -94,6 +108,7 @@ public class PlayerPage extends Fragment {
                 } else {
                     if(activity.getFirstSong() != null) {
                         activity.playAudio(activity.getFirstSong().getData(), 0);
+                        mediaPlayer = activity.getMediaPlayer();
                         setSongInfo(activity.getFirstSong());
                         playImg.setImageResource(R.drawable.ic_pause);
                         playImg.setTag(R.drawable.ic_pause);
@@ -107,6 +122,15 @@ public class PlayerPage extends Fragment {
         if(file != null) {
             titleText.setText(file.getTitle());
             infoText.setText(file.getArtist() + " - " + file.getAlbum());
+            if(activity.currentSongIsLastSong()) {
+                nextImg.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            }
+            if(activity.currentSongIsFirstSong()) {
+                prevImg.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
+            } else {
+                prevImg.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+                nextImg.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+            }
         }
     }
 }
