@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -22,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -41,15 +41,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.toolbar).setBackgroundColor(getColour());
         getWindow().setStatusBarColor(getColour());
-
         checkPermission();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
@@ -71,12 +68,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void loadLibraryPage() {
-
-        setTitle("Music Library");
         Bundle bundle = new Bundle();
         bundle.putSerializable("files", audioList);
 
-        ListFragment fragment = new ListFragment();
+        LibraryPage fragment = new LibraryPage();
         fragment.setArguments(bundle);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.add(R.id.content, fragment, "FragmentName");
@@ -84,7 +79,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNowPlayingPage() {
-        setTitle("Now Playing");
         PlayerPage fragment = new PlayerPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -92,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFriendsPage() {
-        setTitle("Friends");
         FriendsPage fragment = new FriendsPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -100,7 +93,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadSettingsPage() {
-        setTitle("Settings");
         SettingsPage fragment = new SettingsPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -143,9 +135,11 @@ public class MainActivity extends AppCompatActivity {
             currentSongIndex = index;
             mediaPlayer.playMedia(media);
         }
+    }
 
-//        TextView textView = (TextView) findViewById(R.id.textView2);
-//        textView.setText(media);
+    private void setTitle(String title) {
+        TextView titleView = (TextView)findViewById(R.id.title);
+        titleView.setText(title);
     }
 
     public void checkPermission() {
@@ -282,7 +276,8 @@ public class MainActivity extends AppCompatActivity {
     public void loadApp() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-
+        //TODO fix this
+//        navigation.setItemBackgroundResource(getColour());
         loadAudio();
         loadLibraryPage();
     }

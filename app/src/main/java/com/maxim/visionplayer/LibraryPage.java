@@ -13,16 +13,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-public class ListFragment extends Fragment{
+public class LibraryPage extends Fragment{
 
     ArrayList<AudioFile> files;
 
-    public ListFragment() {
+    public LibraryPage() {
 
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstance) {
-        View view = inflater.inflate(R.layout.fragment_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_library, container, false);
 
         Bundle bundle = this.getArguments();
         files = (ArrayList<AudioFile>)bundle.getSerializable("files");
@@ -44,13 +44,13 @@ public class ListFragment extends Fragment{
 
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
-            return new com.maxim.visionplayer.ListFragment.ListViewHolder(view);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_song_item, parent, false);
+            return new LibraryPage.ListViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            ((com.maxim.visionplayer.ListFragment.ListViewHolder) holder).bindView(position);
+            ((LibraryPage.ListViewHolder) holder).bindView(position);
         }
 
         @Override

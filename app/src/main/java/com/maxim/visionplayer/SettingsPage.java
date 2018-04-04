@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +49,7 @@ public class SettingsPage extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings_page, container, false);
 
-
-        toolbar = (android.support.v7.widget.Toolbar) getActivity().findViewById(R.id.toolbar);
+        final BottomNavigationView nav = (BottomNavigationView) getActivity().findViewById(R.id.navigation);
         buttonRed = (Button) view.findViewById(R.id.button);
         buttonGreen = (Button) view.findViewById(R.id.button2);
         buttonYellow = (Button) view.findViewById(R.id.button3);
@@ -57,27 +57,27 @@ public class SettingsPage extends Fragment {
         buttonRed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.colorRed));
                 getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorRed));
                 storeColour(getResources().getColor(R.color.colorRed));
+                nav.setItemBackgroundResource(R.color.colorRed);
             }
         });
 
         buttonGreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.colorGreen));
                 getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorGreen));
                 storeColour(getResources().getColor(R.color.colorGreen));
+                nav.setItemBackgroundResource(R.color.colorGreen);
             }
         });
 
         buttonYellow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                toolbar.setBackgroundColor(getResources().getColor(R.color.colorYellow));
-                getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorYellow));
-                storeColour(getResources().getColor(R.color.colorYellow));
+                getActivity().getWindow().setStatusBarColor(getResources().getColor(R.color.colorPurple));
+                storeColour(getResources().getColor(R.color.colorPurple));
+                nav.setItemBackgroundResource(R.color.colorPurple);
             }
         });
 
