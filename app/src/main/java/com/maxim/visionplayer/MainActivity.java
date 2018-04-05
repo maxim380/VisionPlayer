@@ -1,6 +1,7 @@
 package com.maxim.visionplayer;
 
 import android.Manifest;
+import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -21,7 +22,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -34,7 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<AudioFile> audioList;
     private boolean permissionGranted;
     private int currentSongIndex;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +67,24 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void loadLibraryPage() {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("files", audioList);
+        if(audioList != null) {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("files", audioList);
 
-        LibraryPage fragment = new LibraryPage();
-        fragment.setArguments(bundle);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.add(R.id.content, fragment, "FragmentName");
-        fragmentTransaction.commit();
+            LibraryPage fragment = new LibraryPage();
+            fragment.setArguments(bundle);
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.content, fragment, "FragmentName");
+            fragmentTransaction.commit();
+        } else {
+            //No songs found on phone
+            BottomNavigationView nav = findViewById(R.id.navigation);
+            nav.setVisibility(View.INVISIBLE);
+            NoSongsFragment fragment = new NoSongsFragment();
+            FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.add(R.id.content, fragment, "FragmentName");
+            fragmentTransaction.commit();
+        }
     }
 
     private void loadNowPlayingPage() {
@@ -98,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
     }
-
 
     private void loadNoPermissionsPage() {
         NoPermissionsPage fragment = new NoPermissionsPage();
@@ -137,11 +145,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setTitle(String title) {
-        TextView titleView = (TextView) findViewById(R.id.title);
-        titleView.setText(title);
-    }
-
     public void checkPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_REQUEST_CODE);
@@ -174,11 +177,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void loadAudio() {
-//
-//        if(!permissionGranted) {
-//            return;
-//        }
-
         ContentResolver contentResolver = getContentResolver();
 
 
@@ -208,37 +206,6 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
     }
 
-//    public void checkPermission() {
-//        // Here, thisActivity is the current activity
-//        if (ContextCompat.checkSelfPermission(this,
-//                Manifest.permission.READ_EXTERNAL_STORAGE)
-//                != PackageManager.PERMISSION_GRANTED) {
-//
-//            // Permission is not granted
-//            // Should we show an explanation?
-//            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-//
-//                // Show an explanation to the user *asynchronously* -- don't block
-//                // this thread waiting for the user's response! After the user
-//                // sees the explanation, try again to request the permission.
-//
-//            } else {
-//
-//                // No explanation needed; request the permission
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-//                        1);
-//
-//                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-//                // app-defined int constant. The callback method gets the
-//                // result of the request.
-//            }
-//        } else {
-//            // Permission has already been granted
-//            permissionGranted = true;
-//        }
-//    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -276,8 +243,6 @@ public class MainActivity extends AppCompatActivity {
     public void loadApp() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        //TODO fix this
-//        navigation.setItemBackgroundResource(getColor());
         loadAudio();
         loadLibraryPage();
     }

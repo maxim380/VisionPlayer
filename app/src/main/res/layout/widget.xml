@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrey">
+
+
+    <ImageView
+        android:id="@+id/widget_play_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/widget_next_button"
+        android:background="@drawable/ic_play_arrow" />
+
+    <ImageView
+        android:id="@+id/widget_prev_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/widget_play_button"
+        android:background="@drawable/ic_skip_previous" />
+
+    <ImageView
+        android:id="@+id/widget_next_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/ic_skip_next" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:background="@android:color/background_dark" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/imageView6"
+        android:layout_toEndOf="@+id/imageView6"
+        android:layout_marginLeft="55dp"
+        android:text="Song title" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/widget_prev_button"
+        android:layout_marginStart="44dp"
+        android:layout_toEndOf="@+id/imageView6"
+        android:text="Album - Artist" />
+</RelativeLayout>
