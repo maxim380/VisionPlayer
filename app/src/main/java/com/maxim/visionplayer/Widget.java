@@ -75,8 +75,7 @@ public class Widget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);//add this line
         if (PlayOnClick.equals(intent.getAction())) {
-            // your onClick action is here
-
+            context.sendBroadcast(intent);
         } else if (PrevOnClick.equals(intent.getAction())) {
 
         } else if (NextOnClick.equals(intent.getAction())) {

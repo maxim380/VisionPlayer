@@ -11,6 +11,7 @@
         android:layout_margin="20dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Page three" />
+        android:text="Page three"
+        android:id="@+id/friendsTest"/>
 
 </FrameLayout>
