@@ -1,5 +1,7 @@
 package com.maxim.visionplayer.Models;
 
+import android.graphics.Bitmap;
+
 import java.io.Serializable;
 
 /**
@@ -12,9 +14,9 @@ public class AudioFile implements Serializable {
     private String title;
     private String album;
     private String artist;
-    private String albumArt;
+    private Bitmap albumArt;
 
-    public AudioFile(String data, String title, String album, String artist, String albumArt) {
+    public AudioFile(String data, String title, String album, String artist, Bitmap albumArt) {
         this.data = data;
         this.title = title;
         this.album = album;

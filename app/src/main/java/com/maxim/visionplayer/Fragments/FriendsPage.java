@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,8 +32,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import uk.co.markormesher.android_fab.FloatingActionButton;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -61,8 +60,6 @@ public class FriendsPage extends Fragment {
         View view = inflater.inflate(R.layout.fragment_friends_page, container, false);
         thisView = view;
         mAuth = FirebaseAuth.getInstance();
-        progressBar = view.findViewById(R.id.progressBar2);
-        progressBar.setVisibility(View.GONE);
 
         if(mAuth.getCurrentUser() == null) {
 // Choose authentication providers
@@ -81,14 +78,6 @@ public class FriendsPage extends Fragment {
             user = mAuth.getCurrentUser();
             updateUI(view);
         }
-
-        final FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fab.setContentCoverColour(0xffff9900);
-            }
-        });
 
         return view;
     }

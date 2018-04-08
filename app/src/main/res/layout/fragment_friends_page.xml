@@ -1,10 +1,15 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?android:windowBackground"
     tools:context="com.maxim.visionplayer.MainActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
     <TextView
         android:id="@+id/errorTextView"
@@ -12,26 +17,7 @@
         android:layout_height="wrap_content"
         android:textSize="30sp" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/friendsRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-    <uk.co.markormesher.android_fab.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:buttonIcon="@drawable/ic_add"
-        app:buttonBackgroundColour="@color/colorPrimary"
-        >
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
-    </uk.co.markormesher.android_fab.FloatingActionButton>
 
 </FrameLayout>

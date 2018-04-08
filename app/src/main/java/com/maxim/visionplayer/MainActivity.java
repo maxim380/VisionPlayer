@@ -9,6 +9,9 @@ import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.IBinder;
 import android.provider.MediaStore;
@@ -21,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.maxim.visionplayer.Fragments.FriendsPage;
 import com.maxim.visionplayer.Fragments.LibraryPage;
@@ -207,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 //                Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
 
                 // Save to audioList
-                audioList.add(new AudioFile(data, title, album, artist, ""));
+                audioList.add(new AudioFile(data, title, album, artist, getAlbumArt(data)));
             }
         }
         cursor.close();
@@ -329,6 +333,27 @@ public class MainActivity extends AppCompatActivity {
                 nav.setItemBackgroundResource(R.color.colorGreen);
                 break;
 
+        }
+    }
+
+    public Bitmap getAlbumArt(String songpath) {
+        android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
+        mmr.setDataSource(songpath);
+        byte [] data = mmr.getEmbeddedPicture();
+        //coverart is an Imageview object
+
+        // convert the byte array to a bitmap
+        if(data != null)
+        {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+//            coverart.setImageBitmap(bitmap); //associated cover art in bitmap
+//            coverart.setAdjustViewBounds(true);
+//            coverart.setLayoutParams(new LinearLayout.LayoutParams(500, 500));
+            return bitmap;
+        }
+        else
+        {
+            return null;
         }
     }
 
