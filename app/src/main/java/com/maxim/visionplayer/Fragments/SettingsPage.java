@@ -1,4 +1,4 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Fragments;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -8,6 +8,9 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceManager;
 import android.view.View;
+
+import com.maxim.visionplayer.MainActivity;
+import com.maxim.visionplayer.R;
 
 public class SettingsPage extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 

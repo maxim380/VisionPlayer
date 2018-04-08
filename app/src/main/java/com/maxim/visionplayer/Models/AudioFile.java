@@ -1,4 +1,4 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Models;
 
 import java.io.Serializable;
 

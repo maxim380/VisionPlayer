@@ -1,4 +1,4 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Models;
 
 /**
  * Created by maxim on 4/8/2018.

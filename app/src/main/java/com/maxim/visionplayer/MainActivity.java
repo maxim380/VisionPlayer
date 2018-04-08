@@ -1,7 +1,6 @@
 package com.maxim.visionplayer;
 
 import android.Manifest;
-import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -23,6 +22,14 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.maxim.visionplayer.Fragments.FriendsPage;
+import com.maxim.visionplayer.Fragments.LibraryPage;
+import com.maxim.visionplayer.Fragments.NoPermissionsPage;
+import com.maxim.visionplayer.Fragments.NoSongsFragment;
+import com.maxim.visionplayer.Fragments.PlayerPage;
+import com.maxim.visionplayer.Fragments.SettingsPage;
+import com.maxim.visionplayer.Models.AudioFile;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean permissionGranted;
     private int currentSongIndex;
 
-    private DatabaseHelper helper;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
         changeColor(getColor());
         checkPermission();
-
-        helper = new DatabaseHelper();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -343,9 +346,5 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isPermissionGranted() {
         return this.permissionGranted;
-    }
-
-    public DatabaseHelper getDatabaseHelper() {
-        return this.helper;
     }
 }

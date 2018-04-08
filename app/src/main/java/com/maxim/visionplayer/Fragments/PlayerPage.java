@@ -1,9 +1,8 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Fragments;
 
 
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.maxim.visionplayer.Models.AudioFile;
+import com.maxim.visionplayer.MainActivity;
+import com.maxim.visionplayer.MediaPlayerService;
+import com.maxim.visionplayer.R;
 
 
 /**

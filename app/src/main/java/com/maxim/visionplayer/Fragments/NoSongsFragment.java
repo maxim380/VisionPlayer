@@ -1,10 +1,12 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.maxim.visionplayer.R;
 
 /**
  * Created by maxim on 4/5/2018.

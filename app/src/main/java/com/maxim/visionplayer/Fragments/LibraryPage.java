@@ -1,4 +1,4 @@
-package com.maxim.visionplayer;
+package com.maxim.visionplayer.Fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.maxim.visionplayer.Models.AudioFile;
+import com.maxim.visionplayer.MainActivity;
+import com.maxim.visionplayer.R;
+
 import java.util.ArrayList;
 
 public class LibraryPage extends Fragment{
