@@ -130,8 +130,7 @@ public class PlayerPage extends Fragment {
             infoText.setText(file.getArtist() + " - " + file.getAlbum());
             if(activity.currentSongIsLastSong()) {
                 nextImg.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
-            }
-            if(activity.currentSongIsFirstSong()) {
+            } else if (activity.currentSongIsFirstSong()) {
                 prevImg.setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_ATOP);
             } else {
                 prevImg.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
