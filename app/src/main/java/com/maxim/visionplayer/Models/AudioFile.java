@@ -56,5 +56,7 @@ public class AudioFile implements Serializable {
         this.artist = artist;
     }
 
-
+    public Bitmap getAlbumArt() {
+        return this.albumArt;
+    }
 }

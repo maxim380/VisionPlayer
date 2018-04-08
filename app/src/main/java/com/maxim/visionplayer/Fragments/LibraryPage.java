@@ -78,7 +78,7 @@ public class LibraryPage extends Fragment{
 
         public void bindView(int position) {
             mItemText.setText(files.get(position).getTitle());
-            mItemImage.setImageResource(R.mipmap.ic_launcher);
+            mItemImage.setImageBitmap(files.get(position).getAlbumArt());
         }
 
         public void onClick(View view) {

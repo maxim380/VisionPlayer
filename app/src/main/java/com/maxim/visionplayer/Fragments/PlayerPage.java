@@ -25,6 +25,7 @@ public class PlayerPage extends Fragment {
     private ImageView nextImg;
     private ImageView prevImg;
     private ImageView playImg;
+    private ImageView albumArt;
     private TextView titleText;
     private TextView infoText;
 
@@ -49,6 +50,7 @@ public class PlayerPage extends Fragment {
         nextImg = (ImageView) view.findViewById(R.id.nextImg);
         prevImg = (ImageView) view.findViewById(R.id.prevImg);
         playImg = (ImageView) view.findViewById(R.id.playImg);
+        albumArt = (ImageView) view.findViewById(R.id.albumArt);
 
         setSongInfo(activity.getCurrentSong());
 
@@ -135,6 +137,7 @@ public class PlayerPage extends Fragment {
                 prevImg.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
                 nextImg.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
             }
+            albumArt.setImageBitmap(file.getAlbumArt());
         }
     }
 }
