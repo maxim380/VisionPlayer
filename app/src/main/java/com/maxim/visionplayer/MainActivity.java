@@ -247,6 +247,9 @@ public class MainActivity extends AppCompatActivity {
     public void loadApp() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        if(navigation.getVisibility() == View.INVISIBLE) {
+            navigation.setVisibility(View.VISIBLE);
+        }
         loadAudio();
         loadLibraryPage();
     }
