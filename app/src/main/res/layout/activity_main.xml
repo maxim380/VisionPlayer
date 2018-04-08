@@ -8,6 +8,34 @@
     android:orientation="vertical"
     tools:context="com.maxim.visionplayer.MainActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabAddFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:clickable="true"
+        android:tint="@color/colorWhite"
+        app:backgroundTint="@color/colorRed"
+        app:layout_constraintBottom_toBottomOf="@+id/content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_add" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="328dp"
+        android:layout_marginStart="8dp"
+        android:clickable="true"
+        android:tint="@color/colorWhite"
+        app:backgroundTint="@color/colorRed"
+        app:layout_constraintBottom_toBottomOf="@+id/content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_refresh" />
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"
         android:layout_width="0dp"
@@ -21,7 +49,9 @@
         app:itemIconTint="@color/bottom_nav_color"
         app:itemBackground="@color/colorRed"
         app:menu="@menu/navigation"
-        style="@style/BottomNavigation"/>
+        style="@style/BottomNavigation">
+
+    </android.support.design.widget.BottomNavigationView>
 
     <FrameLayout
         android:id="@+id/content"
@@ -31,6 +61,8 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" >
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

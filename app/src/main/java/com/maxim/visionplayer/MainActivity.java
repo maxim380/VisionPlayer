@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,6 +18,7 @@ import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
@@ -45,12 +47,16 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<AudioFile> audioList;
     private boolean permissionGranted;
     private int currentSongIndex;
+    private FloatingActionButton fabAddFriend;
+    private FloatingActionButton fabRefresh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        fabAddFriend = findViewById(R.id.fabAddFriend);
+        fabRefresh = findViewById(R.id.fabRefresh);
         changeColor(getColor());
         checkPermission();
     }
@@ -78,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void loadLibraryPage() {
-        if(audioList != null) {
+        disableFABs();
+        if (audioList != null) {
             Bundle bundle = new Bundle();
             bundle.putSerializable("files", audioList);
 
@@ -99,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadNowPlayingPage() {
+        disableFABs();
         PlayerPage fragment = new PlayerPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -106,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadFriendsPage() {
+        enableFABs();
         FriendsPage fragment = new FriendsPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -113,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadSettingsPage() {
+        disableFABs();
         SettingsPage fragment = new SettingsPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
@@ -124,6 +134,16 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content, fragment, "FragmentName");
         fragmentTransaction.commit();
+    }
+
+    private void disableFABs() {
+        fabRefresh.setVisibility(View.GONE);
+        fabAddFriend.setVisibility(View.GONE);
+    }
+
+    private void enableFABs() {
+        fabAddFriend.setVisibility(View.VISIBLE);
+        fabRefresh.setVisibility(View.VISIBLE);
     }
 
     //Binding this Client to the AudioPlayer Service
@@ -254,7 +274,7 @@ public class MainActivity extends AppCompatActivity {
     public void loadApp() {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        if(navigation.getVisibility() == View.INVISIBLE) {
+        if (navigation.getVisibility() == View.INVISIBLE) {
             navigation.setVisibility(View.VISIBLE);
         }
         loadAudio();
@@ -318,7 +338,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void changeColor(int color) {
         getWindow().setStatusBarColor(color);
-        BottomNavigationView nav = (BottomNavigationView)findViewById(R.id.navigation);
+        fabRefresh.setBackgroundTintList(ColorStateList.valueOf(color));
+        fabAddFriend.setBackgroundTintList(ColorStateList.valueOf(color));
+        BottomNavigationView nav = (BottomNavigationView) findViewById(R.id.navigation);
         switch (color) {
             case -12627531:
                 nav.setItemBackgroundResource(R.color.colorPrimary);
@@ -339,20 +361,17 @@ public class MainActivity extends AppCompatActivity {
     public Bitmap getAlbumArt(String songpath) {
         android.media.MediaMetadataRetriever mmr = new MediaMetadataRetriever();
         mmr.setDataSource(songpath);
-        byte [] data = mmr.getEmbeddedPicture();
+        byte[] data = mmr.getEmbeddedPicture();
         //coverart is an Imageview object
 
         // convert the byte array to a bitmap
-        if(data != null)
-        {
+        if (data != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 //            coverart.setImageBitmap(bitmap); //associated cover art in bitmap
 //            coverart.setAdjustViewBounds(true);
 //            coverart.setLayoutParams(new LinearLayout.LayoutParams(500, 500));
             return bitmap;
-        }
-        else
-        {
+        } else {
             return null;
         }
     }

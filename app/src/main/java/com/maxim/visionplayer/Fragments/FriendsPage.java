@@ -1,24 +1,31 @@
 package com.maxim.visionplayer.Fragments;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.maxim.visionplayer.R;
@@ -61,13 +68,13 @@ public class FriendsPage extends Fragment {
         thisView = view;
         mAuth = FirebaseAuth.getInstance();
 
-        if(mAuth.getCurrentUser() == null) {
-// Choose authentication providers
+        if (mAuth.getCurrentUser() == null) {
+            // Choose authentication providers
             List<AuthUI.IdpConfig> providers = Arrays.asList(
                     new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                     new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
 
-// Create and launch sign-in intent
+            // Create and launch sign-in intent
             startActivityForResult(
                     AuthUI.getInstance()
                             .createSignInIntentBuilder()
@@ -75,11 +82,64 @@ public class FriendsPage extends Fragment {
                             .build(),
                     RC_SIGN_IN);
         } else {
+            FloatingActionButton fabAddFriend = getActivity().findViewById(R.id.fabAddFriend);
+            FloatingActionButton fabRefresh = getActivity().findViewById(R.id.fabRefresh);
+
+            addFABListeners(fabAddFriend, fabRefresh);
             user = mAuth.getCurrentUser();
             updateUI(view);
         }
 
         return view;
+    }
+
+    private void addFABListeners(FloatingActionButton fabAddFriend, FloatingActionButton fabRefresh) {
+        fabAddFriend.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+
+        fabRefresh.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                //Get permission for location
+
+                //Push to DB, with or without location
+
+                //Update UI
+                updateUI(thisView);
+            }
+        });
+    }
+
+    public void showDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Enter mail address of friend");
+
+
+        final EditText input = new EditText(getActivity());
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//        input.setInputType();
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String friendMail = input.getText().toString();
+                DatabaseAddFriend db = new DatabaseAddFriend();
+                if(db.doInBackground(friendMail)) {
+                    updateUI(thisView);
+                }
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
     }
 
     @Override
@@ -88,19 +148,19 @@ public class FriendsPage extends Fragment {
         // Check if user is signed in (non-null) and update UI accordingly.
         user = mAuth.getCurrentUser();
         System.out.print("on start");
-        if(user != null) {
+        if (user != null) {
 //            updateUI(user);
         }
     }
 
     private void updateUI(View view) {
-        GetDatabaseFriends db = new GetDatabaseFriends();
+        DatabaseFriends db = new DatabaseFriends();
         friends = db.doInBackground();
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.friendsRecycler);
         recyclerView.setAdapter(new ListAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        LinearLayout.LayoutParams contentViewLayout = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT );
+        FrameLayout.LayoutParams contentViewLayout = new FrameLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         view.setLayoutParams(contentViewLayout);
     }
 
@@ -114,6 +174,8 @@ public class FriendsPage extends Fragment {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 user = FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseNewUser db = new DatabaseNewUser();
+                db.doInBackground();
                 updateUI(getView());
             } else {
                 // Sign in failed, check response for error code
@@ -123,8 +185,72 @@ public class FriendsPage extends Fragment {
         }
     }
 
-    public class GetDatabaseFriends extends AsyncTask<String, String, ArrayList<UserFriend>>
-    {
+    public class DatabaseAddFriend extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            conn = null;
+            String mail = strings[0];
+            try {
+                conn = createConnection();
+                if (conn != null) {
+                    String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE fireBaseMail = '" + mail + "';";
+                    Statement statement = conn.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    if (rs.next()) {
+                        query = "INSERT INTO [dbo].VisionPlayerFriendList VALUES((SELECT id FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "'), " + rs.getInt("id") + ");";
+                        statement.execute(query);
+                    }
+                }
+                conn.close();
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+
+    public class DatabaseNewUser extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            conn = null;
+            try {
+                conn = createConnection();
+                if (conn != null) {
+                    String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "';";
+                    Statement statement = conn.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                    if (!rs.next()) {
+                        query = "INSERT INTO [dbo].VisionPlayerUser (currentSong, locationLong, locationLat, fireBaseUID, fireBaseMail, fireBaseName) VALUES ('', '', '','" + user.getUid() + "','" + user.getEmail() + "', '" + user.getDisplayName() + "')";
+                        statement.execute(query);
+                    }
+                }
+                conn.close();
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        return false;
+                    }
+                }
+                return false;
+            }
+        }
+    }
+
+    public class DatabaseFriends extends AsyncTask<String, String, ArrayList<UserFriend>> {
         @Override
         protected ArrayList<UserFriend> doInBackground(String... strings) {
             ArrayList<UserFriend> friends = new ArrayList<>();
@@ -134,8 +260,8 @@ public class FriendsPage extends Fragment {
                     String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE id IN ( SELECT friendID FROM [dbo].VisionPlayerFriendList WHERE userID IN (SELECT id FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "'));";
                     Statement statement = conn.createStatement();
                     ResultSet rs = statement.executeQuery(query);
-                    while(rs.next()) {
-                        friends.add(new UserFriend(rs.getInt("id"),rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName")));
+                    while (rs.next()) {
+                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName")));
                     }
                     conn.close();
                     return friends;
@@ -219,5 +345,6 @@ public class FriendsPage extends Fragment {
             userName.setText(friends.get(position).getName());
             songName.setText(friends.get(position).getCurrentSong());
         }
+
     }
 }
