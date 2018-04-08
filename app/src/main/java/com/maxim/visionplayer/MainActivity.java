@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private boolean permissionGranted;
     private int currentSongIndex;
 
+    private DatabaseHelper helper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         changeColor(getColor());
         checkPermission();
+
+        helper = new DatabaseHelper();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -336,5 +340,9 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isPermissionGranted() {
         return this.permissionGranted;
+    }
+
+    public DatabaseHelper getDatabaseHelper() {
+        return this.helper;
     }
 }

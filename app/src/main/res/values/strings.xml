@@ -11,4 +11,6 @@
     <string name="add_widget">Add widget</string>
     <string name="noSongs">No songs found</string>
     <string name="noSongsText">VisionPlayer could not find any .mp3 files on your phone. Put some on your storage and restart VisionPlayer to start enjoying the music!</string>
+    <string name="notSignedIn">Not signed in</string>
+    <string name="noInternet">Something wrong with internet connection</string>
 </resources>
