@@ -36,7 +36,7 @@ public class NoPermissionsPage extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                activity.checkPermission();
+                activity.checkPermission(MainActivity.READ_EXTERNAL_REQUEST_CODE);
             }
         });
         return view;

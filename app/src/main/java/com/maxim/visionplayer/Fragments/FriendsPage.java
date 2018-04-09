@@ -1,8 +1,13 @@
 package com.maxim.visionplayer.Fragments;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -28,6 +33,7 @@ import com.firebase.ui.auth.IdpResponse;
 import com.google.android.gms.auth.api.Auth;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.maxim.visionplayer.MainActivity;
 import com.maxim.visionplayer.R;
 import com.maxim.visionplayer.Models.UserFriend;
 
@@ -55,6 +61,7 @@ public class FriendsPage extends Fragment {
     private ProgressBar progressBar;
     private ArrayList<UserFriend> friends;
     private View thisView;
+    private MainActivity activity;
 
     public FriendsPage() {
         // Required empty public constructor
@@ -90,6 +97,7 @@ public class FriendsPage extends Fragment {
             updateUI(view);
         }
 
+        activity = (MainActivity) getActivity();
         return view;
     }
 
@@ -103,13 +111,59 @@ public class FriendsPage extends Fragment {
         fabRefresh.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Get permission for location
-
+                activity.checkPermission(MainActivity.GET_LOCATION_REQUEST_CODE);
+                boolean permission = activity.isLocationPermissionGranted();
                 //Push to DB, with or without location
+                String lat = "";
+                String lon = "";
+                if(permission) {
+                    double[] location = getLocation();
+                    lat = Double.toString(location[0]);
+                    lon = Double.toString(location[1]);
+                }
 
+                DatabaseUpdate db = new DatabaseUpdate();
+                db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist());
                 //Update UI
                 updateUI(thisView);
             }
         });
+    }
+
+    @SuppressLint("MissingPermission")
+    private double[] getLocation() {
+        double[] locationArray = new double[2];
+        LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
+        LocationListener listener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                double latitude=location.getLatitude();
+                double longitude=location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, listener);
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if(location != null) {
+            locationArray[0] = location.getLatitude();
+            locationArray[1] = location.getLongitude();
+        }
+
+        return locationArray;
     }
 
     public void showDialog() {
@@ -182,6 +236,38 @@ public class FriendsPage extends Fragment {
                 TextView textView = getView().findViewById(R.id.errorTextView);
                 textView.setText(R.string.notSignedIn);
             }
+        }
+    }
+
+    public class DatabaseUpdate extends AsyncTask<String, String, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(String... strings) {
+            conn = null;
+            String currentSong = strings[0];
+            String artist = strings[3];
+            String lat = strings[1];
+            String lon = strings[2];
+            try {
+                conn = createConnection();
+                if (conn != null) {
+                    String query = "UPDATE [dbo].VisionPlayerUser SET currentSong = '" + currentSong + "', locationLat = '" + lat + "', locationLong = '" + lon + "', currentSongArtist = '" + artist + "' WHERE fireBaseUID = '" + user.getUid() + "';";
+                    Statement statement = conn.createStatement();
+                    ResultSet rs = statement.executeQuery(query);
+                }
+                conn.close();
+                return true;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException ex) {
+                        return false;
+                    }
+                }
+            }
+            return false;
         }
     }
 
@@ -261,7 +347,7 @@ public class FriendsPage extends Fragment {
                     Statement statement = conn.createStatement();
                     ResultSet rs = statement.executeQuery(query);
                     while (rs.next()) {
-                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName")));
+                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName"), rs.getString("currentSongArtist")));
                     }
                     conn.close();
                     return friends;
@@ -344,6 +430,7 @@ public class FriendsPage extends Fragment {
         public void bindView(int position) {
             userName.setText(friends.get(position).getName());
             songName.setText(friends.get(position).getCurrentSong());
+            artist.setText(friends.get(position).getCurrentSongArtist());
         }
 
     }

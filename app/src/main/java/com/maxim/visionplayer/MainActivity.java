@@ -40,7 +40,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int READ_EXTERNAL_REQUEST_CODE = 1;
+    public static final int READ_EXTERNAL_REQUEST_CODE = 1;
+    public static final int GET_LOCATION_REQUEST_CODE = 2;
 
     private MediaPlayerService mediaPlayer;
     private boolean serviceBound = false;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private int currentSongIndex;
     private FloatingActionButton fabAddFriend;
     private FloatingActionButton fabRefresh;
+    private boolean locationPermissionGranted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         fabAddFriend = findViewById(R.id.fabAddFriend);
         fabRefresh = findViewById(R.id.fabRefresh);
         changeColor(getColor());
-        checkPermission();
+        checkPermission(READ_EXTERNAL_REQUEST_CODE);
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -176,13 +178,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_REQUEST_CODE);
-            permissionGranted = false;
-        } else {
-            permissionGranted = true;
-            loadApp();
+    public void checkPermission(int requestCode) {
+        switch (requestCode) {
+            case READ_EXTERNAL_REQUEST_CODE:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_REQUEST_CODE);
+                    permissionGranted = false;
+                } else {
+                    permissionGranted = true;
+                    loadApp();
+                }
+                break;
+            case GET_LOCATION_REQUEST_CODE:
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, GET_LOCATION_REQUEST_CODE);
+                    locationPermissionGranted = false;
+                } else {
+                    locationPermissionGranted = true;
+                }
+                break;
         }
     }
 
@@ -246,20 +260,23 @@ public class MainActivity extends AppCompatActivity {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
                     permissionGranted = true;
                     loadApp();
                 } else {
                     permissionGranted = false;
                     disableApp();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
                 }
                 return;
             }
 
+            case GET_LOCATION_REQUEST_CODE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true;
+                } else {
+                    locationPermissionGranted = false;
+                }
+                return;
             // other 'case' lines to check for other
             // permissions this app might request.
         }
@@ -390,5 +407,9 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean isPermissionGranted() {
         return this.permissionGranted;
+    }
+
+    public boolean isLocationPermissionGranted() {
+        return this.locationPermissionGranted;
     }
 }
