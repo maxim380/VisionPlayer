@@ -12,15 +12,16 @@ public class UserFriend {
     private String locationLat;
     private String name;
     private String currentSongArtist;
+    private String location;
 
-    public UserFriend(int id, String currentSong, String locationLat, String locationLong, String name, String currentSongArtist) {
+    public UserFriend(int id, String currentSong, String locationLat, String locationLong, String name, String currentSongArtist, String location) {
         this.id = id;
         this.currentSong = currentSong;
         this.locationLat = locationLat;
         this.locationLong = locationLong;
         this.name = name;
-        this.currentSong = currentSong;
-
+        this.currentSongArtist = currentSongArtist;
+        this.location = location;
     }
 
     public int getId() {
@@ -45,5 +46,9 @@ public class UserFriend {
 
     public String getCurrentSongArtist() {
         return currentSongArtist;
+    }
+
+    public String getLocation() {
+        return this.location;
     }
 }

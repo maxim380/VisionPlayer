@@ -5,6 +5,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -37,6 +39,7 @@ import com.maxim.visionplayer.MainActivity;
 import com.maxim.visionplayer.R;
 import com.maxim.visionplayer.Models.UserFriend;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -45,6 +48,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -116,14 +120,15 @@ public class FriendsPage extends Fragment {
                 //Push to DB, with or without location
                 String lat = "";
                 String lon = "";
+                String location = "";
                 if(permission) {
-                    double[] location = getLocation();
-                    lat = Double.toString(location[0]);
-                    lon = Double.toString(location[1]);
+                    location = getLocation();
+//                    lat = Double.toString(location[0]);
+//                    lon = Double.toString(location[1]);
                 }
 
                 DatabaseUpdate db = new DatabaseUpdate();
-                db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist());
+                db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist(), location);
                 //Update UI
                 updateUI(thisView);
             }
@@ -131,7 +136,7 @@ public class FriendsPage extends Fragment {
     }
 
     @SuppressLint("MissingPermission")
-    private double[] getLocation() {
+    private String getLocation() {
         double[] locationArray = new double[2];
         LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
         LocationListener listener = new LocationListener() {
@@ -163,17 +168,26 @@ public class FriendsPage extends Fragment {
             locationArray[1] = location.getLongitude();
         }
 
-        return locationArray;
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(locationArray[0], locationArray[1], 1);
+            if(addresses != null && addresses.size() > 0) {
+                String city = addresses.get(0).getLocality();
+                return city;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "";
     }
 
     public void showDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Enter mail address of friend");
 
-
         final EditText input = new EditText(getActivity());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-//        input.setInputType();
         builder.setView(input);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -248,10 +262,11 @@ public class FriendsPage extends Fragment {
             String artist = strings[3];
             String lat = strings[1];
             String lon = strings[2];
+            String location = strings[4];
             try {
                 conn = createConnection();
                 if (conn != null) {
-                    String query = "UPDATE [dbo].VisionPlayerUser SET currentSong = '" + currentSong + "', locationLat = '" + lat + "', locationLong = '" + lon + "', currentSongArtist = '" + artist + "' WHERE fireBaseUID = '" + user.getUid() + "';";
+                    String query = "UPDATE [dbo].VisionPlayerUser SET currentSong = '" + currentSong + "', locationLat = '" + lat + "', locationLong = '" + lon + "', currentSongArtist = '" + artist + "', location = '" + location + "' WHERE fireBaseUID = '" + user.getUid() + "';";
                     Statement statement = conn.createStatement();
                     ResultSet rs = statement.executeQuery(query);
                 }
@@ -347,7 +362,7 @@ public class FriendsPage extends Fragment {
                     Statement statement = conn.createStatement();
                     ResultSet rs = statement.executeQuery(query);
                     while (rs.next()) {
-                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName"), rs.getString("currentSongArtist")));
+                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName"), rs.getString("currentSongArtist"), rs.getString("location")));
                     }
                     conn.close();
                     return friends;
@@ -431,6 +446,7 @@ public class FriendsPage extends Fragment {
             userName.setText(friends.get(position).getName());
             songName.setText(friends.get(position).getCurrentSong());
             artist.setText(friends.get(position).getCurrentSongArtist());
+            location.setText(friends.get(position).getLocation());
         }
 
     }
