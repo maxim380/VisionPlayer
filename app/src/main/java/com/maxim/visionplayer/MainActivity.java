@@ -283,6 +283,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableApp() {
+        disableFABs();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setVisibility(View.INVISIBLE);
         loadNoPermissionsPage();
