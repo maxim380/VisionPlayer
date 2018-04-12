@@ -251,6 +251,8 @@ public class FriendsPage extends Fragment {
                 // Sign in failed, check response for error code
                 TextView textView = getView().findViewById(R.id.errorTextView);
                 textView.setText(R.string.notSignedIn);
+                Toast.makeText(getActivity(), "Not logged in",
+                        Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -273,7 +275,9 @@ public class FriendsPage extends Fragment {
 
                     ResultSet rs = statement.executeQuery();
                 }
-                conn.close();
+                if(conn != null) {
+                    conn.close();
+                }
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -306,7 +310,9 @@ public class FriendsPage extends Fragment {
                         statement.execute(query);
                     }
                 }
-                conn.close();
+                if(conn != null) {
+                    conn.close();
+                }
                 return true;
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -371,7 +377,7 @@ public class FriendsPage extends Fragment {
                     conn.close();
                     return friends;
                 }
-                return friends;
+                return null;
             } catch (SQLException e) {
                 e.printStackTrace();
                 return friends;
@@ -401,7 +407,10 @@ public class FriendsPage extends Fragment {
             return connection;
         } catch (Exception e) {
             TextView textView = thisView.findViewById(R.id.errorTextView);
+            textView.setVisibility(View.VISIBLE);
             textView.setText(R.string.noInternet);
+            Toast.makeText(getActivity(), "Could not connect",
+                    Toast.LENGTH_LONG).show();
             return null;
         }
     }
@@ -422,7 +431,11 @@ public class FriendsPage extends Fragment {
 
         @Override
         public int getItemCount() {
-            return friends.size();
+            if(friends != null) {
+                return friends.size();
+            } else {
+                return 0;
+            }
         }
     }
 

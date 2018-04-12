@@ -13,6 +13,7 @@
 
     <TextView
         android:id="@+id/errorTextView"
+        android:text="PLACEHOLDER"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="30sp" />
