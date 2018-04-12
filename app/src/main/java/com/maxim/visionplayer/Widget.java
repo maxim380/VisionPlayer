@@ -1,5 +1,6 @@
 package com.maxim.visionplayer;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -45,7 +46,6 @@ public class Widget extends AppWidgetProvider {
             remoteViews.setOnClickPendingIntent(R.id.widget_next_button, getPendingSelfIntent(context, NextOnClick));
             remoteViews.setOnClickPendingIntent(R.id.widget_prev_button, getPendingSelfIntent(context, PrevOnClick));
             remoteViews.setOnClickPendingIntent(R.id.widget_play_button, getPendingSelfIntent(context, PlayOnClick));
-//            remoteViews.setTextViewText(R.id.widget_textview_gpscoords, "gps cords");
             appWidgetManager.updateAppWidget(thisWidget, remoteViews);
 
         }
@@ -75,12 +75,16 @@ public class Widget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);//add this line
         if (PlayOnClick.equals(intent.getAction())) {
-            context.sendBroadcast(intent);
+            startApp(context);
         } else if (PrevOnClick.equals(intent.getAction())) {
-
+            startApp(context);
         } else if (NextOnClick.equals(intent.getAction())) {
-
+            startApp(context);
         }
+    }
+
+    private void startApp(Context context) {
+
     }
 }
 

@@ -29,6 +29,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
@@ -124,13 +125,13 @@ public class FriendsPage extends Fragment {
                 String location = "";
                 if(permission) {
                     location = getLocation();
-//                    lat = Double.toString(location[0]);
-//                    lon = Double.toString(location[1]);
                 }
 
                 DatabaseUpdate db = new DatabaseUpdate();
                 db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist(), location);
                 //Update UI
+                Toast.makeText(getActivity(), "Refreshed",
+                        Toast.LENGTH_SHORT).show();
                 updateUI(thisView);
             }
         });

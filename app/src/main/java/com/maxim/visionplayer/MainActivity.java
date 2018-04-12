@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.maxim.visionplayer.Fragments.FriendsPage;
 import com.maxim.visionplayer.Fragments.LibraryPage;
