@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:title="App color"
-        android:summary="Select the color you want the app to use"
+        android:title="@string/colorPref"
+        android:summary="@string/colorPrefText"
         android:key="colorString"
         android:defaultValue="1"
         android:entries="@array/listArray"

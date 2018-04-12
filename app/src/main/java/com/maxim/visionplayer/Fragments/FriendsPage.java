@@ -130,7 +130,7 @@ public class FriendsPage extends Fragment {
                 DatabaseUpdate db = new DatabaseUpdate();
                 db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist(), location);
                 //Update UI
-                Toast.makeText(getActivity(), "Refreshed and updated!",
+                Toast.makeText(getActivity(), R.string.refresh,
                         Toast.LENGTH_SHORT).show();
                 updateUI(thisView);
             }
@@ -251,7 +251,7 @@ public class FriendsPage extends Fragment {
                 // Sign in failed, check response for error code
                 TextView textView = getView().findViewById(R.id.errorTextView);
                 textView.setText(R.string.notSignedIn);
-                Toast.makeText(getActivity(), "Not logged in",
+                Toast.makeText(getActivity(), R.string.notSignedIn,
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -368,11 +368,11 @@ public class FriendsPage extends Fragment {
             try {
                 conn = createConnection();
                 if (conn != null) {
-                    String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE id IN ( SELECT friendID FROM [dbo].VisionPlayerFriendList WHERE userID IN (SELECT id FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "'));";
+                    String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "' OR id IN ( SELECT friendID FROM [dbo].VisionPlayerFriendList WHERE userID IN (SELECT id FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "'));";
                     Statement statement = conn.createStatement();
                     ResultSet rs = statement.executeQuery(query);
                     while (rs.next()) {
-                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName"), rs.getString("currentSongArtist"), rs.getString("location")));
+                        friends.add(new UserFriend(rs.getInt("id"), rs.getString("currentSong"), rs.getString("locationLat"), rs.getString("locationLong"), rs.getString("fireBaseName"), rs.getString("currentSongArtist"), rs.getString("location"), rs.getString("fireBaseUID")));
                     }
                     conn.close();
                     return friends;
@@ -409,7 +409,7 @@ public class FriendsPage extends Fragment {
             TextView textView = thisView.findViewById(R.id.errorTextView);
             textView.setVisibility(View.VISIBLE);
             textView.setText(R.string.noInternet);
-            Toast.makeText(getActivity(), "Could not connect",
+            Toast.makeText(getActivity(), R.string.noConnection,
                     Toast.LENGTH_LONG).show();
             return null;
         }
@@ -460,7 +460,12 @@ public class FriendsPage extends Fragment {
         }
 
         public void bindView(int position) {
-            userName.setText(friends.get(position).getName());
+            if(position == 0) {
+                String s = friends.get(position).getName() + " (you)";
+                userName.setText(s);
+            } else {
+                userName.setText(friends.get(position).getName());
+            }
             songName.setText(friends.get(position).getCurrentSong());
             artist.setText(friends.get(position).getCurrentSongArtist());
             location.setText(friends.get(position).getLocation());

@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void loadNowPlayingPage() {
+    public void loadNowPlayingPage() {
         disableFABs();
         PlayerPage fragment = new PlayerPage();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     public void playAudio(String media, int index) {
-        //Check is service is active
         if (!serviceBound) {
             currentSongIndex = index;
             Intent playerIntent = new Intent(this, MediaPlayerService.class);

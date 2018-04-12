@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">VisionPlayer</string>
+    <string name="noPermission">Geen toegang verleend</string>
+    <string name="grant_permission">Toegang verlenen</string>
+    <string name="noPermissionText">VisionPlayer heeft toegang nodig tot het lezen van het externe geheugen om je nummers af te kunnen spelen. Klik op de knop hieronder om toegang te verlenen.</string>
+    <string name="musicLibrary">Bibliotheek</string>
+    <string name="nowPlaying">Huidige nummer</string>
+    <string name="friends">Vrienden</string>
+    <string name="settings">Instellingen</string>
+    <string name="appwidget_text">Voorbeeld</string>
+    <string name="add_widget">Add widget</string>
+    <string name="noSongs">Geen nummers gevonden</string>
+    <string name="noSongsText">VisionPlayer heeft geen .mp3 bestanden op je telefoon kunnen vinden. Plaats er een paar om en herstart VisionPlayer om van je muziek te genieten!</string>
+    <string name="notSignedIn">Niet ingelogd</string>
+    <string name="noInternet">Er is iets misgegaan met de internet verbinding</string>
+    <string name="refresh">Vernieuwd en geupdate!</string>
+    <string name="noConnection">Probleem met verbinden</string>
+    <string name="colorPref">App kleur</string>
+    <string name="colorPrefText">Selecteer de kleur die je voor de app wilt gebruiken</string>
+    <string name="you">(U)</string>
+</resources>

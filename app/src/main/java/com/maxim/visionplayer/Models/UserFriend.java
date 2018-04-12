@@ -13,8 +13,9 @@ public class UserFriend {
     private String name;
     private String currentSongArtist;
     private String location;
+    private String uid;
 
-    public UserFriend(int id, String currentSong, String locationLat, String locationLong, String name, String currentSongArtist, String location) {
+    public UserFriend(int id, String currentSong, String locationLat, String locationLong, String name, String currentSongArtist, String location, String uid) {
         this.id = id;
         this.currentSong = currentSong;
         this.locationLat = locationLat;
@@ -22,6 +23,11 @@ public class UserFriend {
         this.name = name;
         this.currentSongArtist = currentSongArtist;
         this.location = location;
+        this.uid = uid;
+    }
+
+    public String getUid() {
+        return this.uid;
     }
 
     public int getId() {
