@@ -42,6 +42,7 @@ import com.maxim.visionplayer.Models.UserFriend;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -260,15 +261,16 @@ public class FriendsPage extends Fragment {
             conn = null;
             String currentSong = strings[0];
             String artist = strings[3];
-            String lat = strings[1];
-            String lon = strings[2];
             String location = strings[4];
             try {
                 conn = createConnection();
                 if (conn != null) {
-                    String query = "UPDATE [dbo].VisionPlayerUser SET currentSong = '" + currentSong + "', locationLat = '" + lat + "', locationLong = '" + lon + "', currentSongArtist = '" + artist + "', location = '" + location + "' WHERE fireBaseUID = '" + user.getUid() + "';";
-                    Statement statement = conn.createStatement();
-                    ResultSet rs = statement.executeQuery(query);
+                    String query = "UPDATE [dbo].VisionPlayerUser SET currentSong = ?, currentSongArtist = ?, location = '" + location + "' WHERE fireBaseUID = '" + user.getUid() + "';";
+                    PreparedStatement statement = conn.prepareStatement(query);
+                    statement.setString(1, currentSong);
+                    statement.setString(2, artist);
+
+                    ResultSet rs = statement.executeQuery();
                 }
                 conn.close();
                 return true;
@@ -328,11 +330,12 @@ public class FriendsPage extends Fragment {
                 conn = createConnection();
                 if (conn != null) {
                     String query = "SELECT * FROM [dbo].VisionPlayerUser WHERE fireBaseUID = '" + user.getUid() + "';";
-                    Statement statement = conn.createStatement();
+                    PreparedStatement statement = conn.prepareStatement(query);
                     ResultSet rs = statement.executeQuery(query);
                     if (!rs.next()) {
                         query = "INSERT INTO [dbo].VisionPlayerUser (currentSong, locationLong, locationLat, fireBaseUID, fireBaseMail, fireBaseName) VALUES ('', '', '','" + user.getUid() + "','" + user.getEmail() + "', '" + user.getDisplayName() + "')";
-                        statement.execute(query);
+                        statement = conn.prepareStatement(query);
+                        statement.executeQuery();
                     }
                 }
                 conn.close();
