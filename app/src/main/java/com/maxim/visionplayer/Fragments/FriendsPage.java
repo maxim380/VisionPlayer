@@ -130,7 +130,7 @@ public class FriendsPage extends Fragment {
                 DatabaseUpdate db = new DatabaseUpdate();
                 db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist(), location);
                 //Update UI
-                Toast.makeText(getActivity(), "Refreshed",
+                Toast.makeText(getActivity(), "Refreshed and updated!",
                         Toast.LENGTH_SHORT).show();
                 updateUI(thisView);
             }
