@@ -137,6 +137,14 @@ public class FriendsPage extends Fragment {
         });
     }
 
+    public void updateDB() {
+        String lat = "";
+        String lon = "";
+        String location = getLocation();
+        DatabaseUpdate db = new DatabaseUpdate();
+        db.doInBackground(activity.getCurrentSong().getTitle(), lat, lon, activity.getCurrentSong().getArtist(), location);
+    }
+
     @SuppressLint("MissingPermission")
     private String getLocation() {
         double[] locationArray = new double[2];

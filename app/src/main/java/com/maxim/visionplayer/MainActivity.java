@@ -237,13 +237,6 @@ public class MainActivity extends AppCompatActivity {
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
-//                String albumArt = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
-
-//                Long albumId = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID));
-//
-//                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-//                Uri albumArtUri = ContentUris.withAppendedId(sArtworkUri, albumId);
-
                 // Save to audioList
                 audioList.add(new AudioFile(data, title, album, artist, getAlbumArt(data)));
             }
